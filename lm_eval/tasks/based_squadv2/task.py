@@ -3,12 +3,11 @@ import re
 import numpy as np
 from lm_eval.api.task import ConfigurableTask
 from lm_eval.api.instance import Instance
-import datasets
+import evaluate
 
 
 def _squad_metric(predictions, references):
-    # squad_metric = load("squad_v2")
-    squad_metric = datasets.load_metric("squad_v2")
+    squad_metric = evaluate.load("squad_v2")
     return squad_metric.compute(predictions=predictions, references=references)
 
 

@@ -455,27 +455,49 @@ class Task(abc.ABC):
             doc_id_docs,
             total=num_docs,
         ):
-            # sample fewshot context #TODO: need to offset doc_id by rank now!
-            fewshot_ctx = self.fewshot_context(
-                doc,
-                num_fewshot=0
-                if self.config.num_fewshot is None
-                else self.config.num_fewshot,
-                system_instruction=system_instruction,
-                apply_chat_template=apply_chat_template,
-                fewshot_as_multiturn=fewshot_as_multiturn,
-                chat_template=chat_template,
-                gen_prefix=self.doc_to_prefix(doc),
-            )
+            if apply_chat_template:
+                # sample fewshot context #TODO: need to offset doc_id by rank now!
+                fewshot_ctx = self.fewshot_context(
+                    doc,
+                    num_fewshot=0
+                    if self.config.num_fewshot is None
+                    else self.config.num_fewshot,
+                    system_instruction=system_instruction,
+                    apply_chat_template=apply_chat_template,
+                    fewshot_as_multiturn=fewshot_as_multiturn,
+                    chat_template=chat_template,
+                    gen_prefix=self.doc_to_prefix(doc),
+                )
 
-            # TODO: we should override self.config.repeats if doing greedy gen so users don't waste time+compute
-            inst = self.construct_requests(
-                doc=doc,
-                ctx=fewshot_ctx,
-                metadata=(self.config["task"], doc_id, self.config.repeats),
-                apply_chat_template=apply_chat_template,
-                chat_template=chat_template,
-            )
+                # TODO: we should override self.config.repeats if doing greedy gen so users don't waste time+compute
+                inst = self.construct_requests(
+                    doc=doc,
+                    ctx=fewshot_ctx,
+                    metadata=(self.config["task"], doc_id, self.config.repeats),
+                    apply_chat_template=apply_chat_template,
+                    chat_template=chat_template,
+                )
+            else:
+                # sample fewshot context #TODO: need to offset doc_id by rank now!
+                fewshot_ctx = self.fewshot_context(
+                    doc,
+                    num_fewshot=0
+                    if self.config.num_fewshot is None
+                    else self.config.num_fewshot,
+                    system_instruction=system_instruction,
+                    apply_chat_template=apply_chat_template,
+                    fewshot_as_multiturn=fewshot_as_multiturn,
+                    chat_template=chat_template,
+                    gen_prefix=self.doc_to_prefix(doc),
+                )
+
+                # TODO: we should override self.config.repeats if doing greedy gen so users don't waste time+compute
+                inst = self.construct_requests(
+                    doc=doc,
+                    ctx=fewshot_ctx,
+                    metadata=(self.config["task"], doc_id, self.config.repeats),
+                )
+
 
             if not isinstance(inst, list):
                 inst = [inst]

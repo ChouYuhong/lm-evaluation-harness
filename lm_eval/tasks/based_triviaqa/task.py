@@ -1,4 +1,4 @@
-import datasets
+import evaluate
 from math import exp
 from functools import partial
 from lm_eval.api.task import ConfigurableTask
@@ -9,7 +9,7 @@ import numpy as np
 
 
 def _squad_metric(predictions, references):
-    squad_metric = datasets.load_metric("squad_v2")
+    squad_metric = evaluate.load("squad_v2")
     return squad_metric.compute(predictions=predictions, references=references)
 
 
